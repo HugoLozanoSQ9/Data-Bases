@@ -1,0 +1,41 @@
+--Tarea 1
+
+Todos los clientes por apellido de A-Z
+
+Select first_name, last_name
+from customer
+Order By last_name ASC;
+
+Todos los clientes por apellido de Z-A
+
+Select first_name, last_name
+from customer
+Order By last_name DESC;
+
+Todos los clientes por apellido de A-Z
+
+Select first_name, last_name
+from customer
+Order By first_name ASC, last_name DESC;
+
+Mostrar un conjunto de datos que cumplan los siguientes parámetros: 
+
+debe mostrar el nombre y su longitud de caracteres de cada cliente. La longitud debe identificarse con el nombre de len.
+
+Tip. La función LENGTH() recibe una cadena de caracteres y devuelve la longitud de esa cadenaLa lista de datos debe estar 
+ordenada por la longitud de caracteres, de mayor a menor
+
+select LENGTH(CONCAT(first_name, ' ' , last_name)) as len 
+FROM customer 
+ORDER BY len DESC;
+
+--De la tabla de clientes muestra el nombre y la longitud de caracteres
+--del nombre de todos los clientes cuyo nombre comience con A y la longitud
+--de los caracteres de su nombre se encuentre  3 y 5 caracteres, ordenados por la cantidad de caracteres
+
+SELECT first_name, LENGTH(first_name) len
+FROM customer
+WHERE first_name like 'A%'  AND LENGTH(first_name) BETWEEN 3 AND 5
+Order By len 
+ 
+

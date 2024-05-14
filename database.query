@@ -1,0 +1,14 @@
+select  CONCAT(first_name, ' ' , last_name) as full_name FROM customer;
+
+
+
+-- busqueda con order by
+SELECT customer_id, first_name, last_name, email
+FROM customer
+ORDER BY customer_id; --Se puede integrar el DESC para que lo muestre ascendente (del numero mayor al menor) por defecto es ASC
+
+-- Se pueden detallar un poco más:
+
+SELECT customer_id, first_name, last_name, email
+FROM customer
+ORDER BY first_name DEC, last_name ASC, customer_id;

@@ -1,0 +1,68 @@
+1.- Muestra la consulta que objetenga los datos de los pagos de cada cliente . Los datos que se requieren: 
+ID del cliente, Nombre, Apellido, Monto del pago, Fecha del pago
+
+SELECT customer.customer_id,first_name, last_name,amount, payment_date
+FROM customer
+FULL JOIN payment
+	ON customer.customer_id = payment.customer_id
+ORDER BY customer_id;
+
+En esta situación NO es correcta la consulta dado que no estamos tenieno manejo de errores.
+
+SELECT customer.customer_id,first_name, last_name,amount, payment_date
+FROM customer
+FULL JOIN payment
+	ON customer.customer_id = payment.customer_id
+WHERE amount IS NOT NULL            /// de hecho sería mas conveniente hacer la consulta con payment.payment_id en lugar de amount
+ORDER BY customer_id desc;
+
+Where amount IS NOT NULL me muestra unicamente cuales son los datos donde el pago se ha realizado (donde el valor del pago no sea NULL)
+
+O BIEN, la mejor forma sería de la siguiente forma: 
+
+SELECT customer.customer_id,first_name, last_name,amount, payment_date
+FROM customer
+INNER JOIN payment
+	ON customer.customer_id = payment.customer_id
+ORDER BY customer_id desc;
+
+INNER JOIN por defecto me da los valores que coincidan de ambos conjuntos (ocea que no me muestra los que tengan null en alguna de las 2 tablas)
+
+2.- query que nos permita obtener la lista de rentas que se tienen registradas junto con los datos del cliente al que se le rentó
+
+Columnas: 
+ID del cliente 
+Nombre
+Apellido
+Fecha de la renta
+
+Esto es correcto 
+
+SELECT customer.customer_id, first_name, last_name, rental_date
+FROM customer
+INNER JOIN rental
+	ON customer.customer_id = rental.customer_id
+ORDER BY customer_id;
+
+
+En cambio se pudo haber hecho mejor :D! con el , return_date
+
+SELECT customer.customer_id, first_name, last_name, rental_date, return_date
+FROM customer
+INNER JOIN rental
+	ON customer.customer_id = rental.customer_id
+ ORDER BY customer_id;
+
+Esto por que en return date SI hay datos que pueden seguir siendo null por que no se han regresado las peliculas (a ese momento) por lo que ahora tendríamos que hacer otro filtro 
+
+SELECT customer.customer_id, first_name, last_name, rental_date, return_date
+FROM customer
+INNER JOIN rental
+	ON customer.customer_id = rental.customer_id
+  WHERE return_date IS NOT NULL
+ ORDER BY customer_id desc;
+
+Where return IS NOT NULL :D! con esto podemos tener los lugares donde return_date IS NOT NULL (no sea un valor nulo) o bien en caso de necesitarse.
+porder hacer una consulta donde return_date sea nulo (y poder ver quien no ha devuelto la pelicula)
+
+Cuando no se tenga una tgabla directa entonces se debe de llegar a partir de las tablas adyacentes.

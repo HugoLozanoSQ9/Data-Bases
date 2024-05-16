@@ -1,0 +1,110 @@
+1.-Genera una consulta que devuelva la lista de pagos realizados por el cliente número 2. Los datos a consultar son: 
+
+id del cliente, nombre, apellido, email, dirección, ciudad, país, monto del pago, fecha
+
+select customer.customer_id, first_name, last_name, email, address, city, country, amount, payment_date
+from customer
+inner join address
+on customer.address_id = address.address_id
+inner join city
+on address.city_id = city.city_id
+inner join country 
+on city.country_id = country.country_id
+inner join payment 
+on customer.customer_id = payment.customer_id
+where customer.customer_id = 2 AND payment_date IS NOT NULL
+order by customer.customer_id asc;
+
+
+/*2. Genera una consulta que devuelva la lista de todos los pagos 
+recibidos incluyendo datos del cliente y el empleado que registró el pago. 
+Los datos a consultar son:
+    - id del cliente
+    - nombre del cliente
+    - apellido del cliente
+    - nombre del empleado
+    - apellido del empleado
+    - monto
+    - fecha de pago
+*/
+
+
+
+select customer.customer_id, customer.first_name, customer.last_name, staff.first_name, staff.last_name, amount, payment_date
+from customer
+inner join payment
+on customer.customer_id = payment.customer_id
+inner join staff
+on payment.staff_id = staff.staff_id
+order by customer.customer_id;
+
+
+/*3. Genera una consulta que devuelva la lista de DVDs que se 
+tiene en inventario. Los datos a consultar son:
+    - id de la película
+    - título de la película
+    - codigo de inventario
+    
+    - Bonus: cantidad de DVDs en existencia de cada película
+*/
+
+select film.film_id, title, inventory.inventory_id, inventory.store_id
+from rental 
+inner join inventory
+on rental.inventory_id = inventory.inventory_id
+inner join film 
+on inventory.film_id = film.film_id
+order by title;
+
+
+group by sirve para agrupar los elementos duplicados 
+
+
+select f.film_id, title,count(i.inventory_id)
+from inventory as i 
+left Join film as f on i.film_id=f.film_id
+group by f.film_id
+order by f.film_id;
+
+
+/*4. Genera una consulta que agregue una nueva tabla 
+llamada film_reviews que almacenará opiniones acerca de las películas, 
+con las siguientes columnas:
+    - review_id, representa el identificador único de los registros
+    - film_id, representa la relación entre las opiniones y las películas
+    - review, almacenará el texto de la opinión
+*/
+
+create table if not exists film_reviews (
+  review_id SERIAL primary key,
+  film_id INT, --default 5
+  review_id VARCHAR (15),
+  
+  constraint fk_film
+  	foreign key (film_id)
+  		references film(film_id)
+   		ON DELETE CASCADE
+);
+
+ON DELETE CASCADE hace que si algun film se elimine entonces a su vez también va a eliminar el comentario
+ON DELETE SET NULL entonces solamente lo pondrá en NULL
+ON DELETE RESTRICT cuando se quiera borrar la película nos mostrará un mensaje de error de que no nos lo permite (dado que se encuentra relacionado)
+por defecto se encuentra en RESTRICT.
+ON DELETE NO ACTION  No hace nada 
+ON DELETE SET DEFAULT cuando se elimine la película se pondrá el valor por defecto pero solo si se declara el default
+
+Se insertan los datos
+
+insert into film_reviews (film_id,review)
+values (1002,'excelente pelicula'),
+(1002,'ta buena'),
+(1002,'good'),
+(1002,'excelente'),
+(1002,'pelicula'),
+
+se consultan los datos
+
+select review, title ,count (review_id) from film_reviews
+left join film on film.film_id = film_reviews.film_id
+group by review,title;
+
